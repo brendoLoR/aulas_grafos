@@ -10,7 +10,7 @@ export class NodoBrendoniano {
    */
   constructor(id, name) {
     this.name = name
-    this.dist = 9999999
+    this.custo = 9999999
     this.ant = null
     this.closed = false
   }
@@ -18,8 +18,8 @@ export class NodoBrendoniano {
   setId(id) {
     this.id = id
   }
-  addFilho(node) {
-    this.filhos.push({ id: node.id, node })
+  addFilho(node, peso) {
+    this.filhos.push({ id: node.id, node, peso })
   }
 
   printSelf(node) {

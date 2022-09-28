@@ -35,6 +35,8 @@ pai_id = grafo.addNode(filho2, pai_id, 10)
 grafo.addAresta(15, 9)
 
 
-console.log(grafo.buscaLargura('node3', 13))
-grafo.setAllNaoVisitado()
-console.log(grafo.buscaProfundidade('node3', 13))
+// console.log(grafo.buscaLargura('node3', 13))
+// grafo.setAllNaoVisitado()
+// console.log(grafo.buscaProfundidade('node3', 13))
+
+console.log(grafo.getMelhorCaminhoDijkstra(1, 8));

@@ -7,6 +7,7 @@ export class GrafoBrendoniano {
   arestas = []
 
   constructor(node) {
+    node.custo = 0 //root para dijkstra
     let node_id = this.nodes.push(node) - 1
     node.setId(node_id)
   }
@@ -22,7 +23,7 @@ export class GrafoBrendoniano {
     let node_id = this.nodes.push(node) - 1
     node.ant = this.nodes[parent_id]
     node.setId(node_id)
-    this.nodes[parent_id].addFilho(node)
+    this.nodes[parent_id].addFilho(node, peso)
     return node_id
   }
   addNodeSemPai(node) {
@@ -41,6 +42,30 @@ export class GrafoBrendoniano {
 
   getNode(node_id) {
     return this.node[node_id]
+  }
+
+  getMelhorCaminhoDijkstra(node_de, node_para) {
+    this.setAllNaoVisitado()
+    this.setCustoInfinitoAll()
+    this.nodes[node_de].custo = 0;
+    this.ordeneNodes()
+    let menor = this.nodes[0]
+    let caminho = []
+    let menor_id = caminho.push({ node: menor, estimativa: 0, anterior: menor }) - 1
+    while (menor) {
+      menor.closed = true
+      menor.filhos.forEach(node_filho => {
+       let  soma = caminho[menor_id].estimativa + node_filho.peso
+        if (soma < node_filho.node.custo) {
+          node_filho.node.custo = soma
+          node_filho.node.ant = menor
+        }
+      })
+      this.ordeneNodes()
+      menor = this.nodes.filter(node => !node.closed)[0]
+      menor_id = caminho.push({ node: menor, estimativa: 0, anterior: menor }) - 1
+    }
+    return caminho
   }
 
   buscaProfundidade(chave, inicio_id) {
@@ -121,5 +146,18 @@ export class GrafoBrendoniano {
       node.closed = false;
     })
   }
+
+  ordeneNodes() {
+    this.nodes = this.nodes.sort((a, b) => {
+      return a.custo - b.custo
+    })
+  }
+
+  setCustoInfinitoAll() {
+    this.nodes.forEach(node => {
+      node.custo = 9999999
+    })
+  }
+
 
 }
