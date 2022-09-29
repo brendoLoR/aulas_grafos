@@ -21,9 +21,12 @@ export class GrafoBrendoniano {
    */
   addNode(node, parent_id, peso) {
     let node_id = this.nodes.push(node) - 1
-    node.ant = this.nodes[parent_id]
+
+    node.ant = null
     node.setId(node_id)
-    this.nodes[parent_id].addFilho(node, peso)
+    if (parent_id == NaN) {
+      this.nodes[parent_id].addFilho(node, peso)
+    }
     return node_id
   }
   addNodeSemPai(node) {
@@ -32,8 +35,8 @@ export class GrafoBrendoniano {
     return node_id
   }
 
-  addAresta(de_id, para_id) {
-    this.nodes[de_id].addFilho(this.nodes[para_id])
+  addAresta(de_id, para_id, peso) {
+    this.nodes[de_id].addFilho(this.nodes[para_id], peso)
   }
 
   printGrafo() {
@@ -45,27 +48,35 @@ export class GrafoBrendoniano {
   }
 
   getMelhorCaminhoDijkstra(node_de, node_para) {
+    return this.getDijkstra(node_de).find(node => node.id == node_para)
+  }
+  getDijkstra(node_de) {
     this.setAllNaoVisitado()
     this.setCustoInfinitoAll()
     this.nodes[node_de].custo = 0;
+    this.nodes[node_de].closed = true;
     this.ordeneNodes()
     let menor = this.nodes[0]
-    let caminho = []
-    let menor_id = caminho.push({ node: menor, estimativa: 0, anterior: menor }) - 1
+
     while (menor) {
-      menor.closed = true
-      menor.filhos.forEach(node_filho => {
-       let  soma = caminho[menor_id].estimativa + node_filho.peso
-        if (soma < node_filho.node.custo) {
-          node_filho.node.custo = soma
-          node_filho.node.ant = menor
-        }
+      this.nodes.filter(node => node.closed).forEach(node_visitado => {
+        node_visitado.filhos.filter(filho => !filho.node.closed).forEach(filho => {
+          let soma = node_visitado.custo + filho.peso
+          if (soma < filho.node.custo) {
+            filho.node.custo = soma
+            filho.node.ant = node_visitado
+          }
+        })
       })
+
+
       this.ordeneNodes()
       menor = this.nodes.filter(node => !node.closed)[0]
-      menor_id = caminho.push({ node: menor, estimativa: 0, anterior: menor }) - 1
+      if (menor) {
+        this.nodes.filter(node => !node.closed)[0].closed = true
+      }
     }
-    return caminho
+    return this.nodes
   }
 
   buscaProfundidade(chave, inicio_id) {
