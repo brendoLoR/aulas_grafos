@@ -24,8 +24,10 @@ export class GrafoBrendoniano {
 
     node.ant = null
     node.setId(node_id)
-    if (parent_id == NaN) {
-      this.nodes[parent_id].addFilho(node, peso)
+    if (parent_id) {
+      // console.log(this.nodes)
+      this.addAresta(parent_id, node_id, peso)
+      // this.nodes[parent_id].addFilho(node, peso)
     }
     return node_id
   }
@@ -36,7 +38,8 @@ export class GrafoBrendoniano {
   }
 
   addAresta(de_id, para_id, peso) {
-    this.nodes[de_id].addFilho(this.nodes[para_id], peso)
+    // console.log(this.nodes.find(node => node.id == de_id))
+    this.nodes.find(node => node.id == de_id).addFilho(this.nodes.find(node => node.id == para_id), peso)
   }
 
   printGrafo() {
@@ -79,6 +82,37 @@ export class GrafoBrendoniano {
     return this.nodes
   }
 
+  getKahn(){
+    return this._getKahn(this.nodes)
+  }
+  _getKahn(nodes){
+    var ordenado = []
+    let index = nodes.findIndex(node => node.pais.length == 0)
+    if(index > -1){
+      var sem_pais = nodes.splice(index, 1)[0]
+    }
+    // console.log(sem_pais)
+    while (sem_pais) {
+    sem_pais.filhos.forEach(filho => {
+      // console.log(filho)
+      index = filho.node.pais.findIndex(pai => pai.id == sem_pais.id)
+      if(index > -1){
+        filho.node.pais.splice(index, 1)
+      }
+      // console.log(filho)
+      // console.log("SEPARAÇÃOOOO")
+      
+    })
+    ordenado.push(sem_pais)
+      index = nodes.findIndex(node => node.pais.length == 0)
+      if(index > -1){
+        sem_pais = nodes.splice(index, 1)[0]
+      }else{
+        sem_pais = false
+      }
+    }
+    return ordenado
+  }
   buscaProfundidade(chave, inicio_id) {
     return this._buscaProfundidade(chave, this.nodes[inicio_id], { status: false, r: "não encontreado" }, 0)
   }

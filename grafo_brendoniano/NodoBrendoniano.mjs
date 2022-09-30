@@ -1,5 +1,6 @@
 export class NodoBrendoniano {
   filhos = []
+  pais = []
   id = null
 
 
@@ -20,6 +21,7 @@ export class NodoBrendoniano {
   }
   addFilho(node, peso) {
     this.filhos.push({ id: node.id, node, peso })
+    node.pais.push(this)
   }
 
   printSelf(node) {
