@@ -87,10 +87,37 @@ console.log("GRAFO:::::::");
 //     console.table(node.filhos);
 // })
 
-// grafo.getKahn()
-grafo.getKahn().map(node => {
-    console.log(node);
-    console.log("FILHOS: ");
-    console.table(node.filhos);
-})
-// console.log(grafo.nodes);
+// // grafo.getKahn()
+// grafo.getKahn().map(node => {
+//     console.log(node);
+//     console.log("FILHOS: ");
+//     console.table(node.filhos);
+// })
+// // console.log(grafo.nodes);
+
+
+
+let graf = [
+  [0,0,1,-1],
+  [0,-1,1,0],
+  [-1,0,0,1],
+  [1,-1,0,0],
+]
+
+let graf_2 =  [
+  [0,0,0,0],
+  [0,0,0,0],
+  [0,0,0,0],
+  [0,0,0,0],]
+
+  console.table(graf)
+for (let coluna = 0; coluna < graf[0].length; coluna++) {
+
+  let linha_m_id = graf[coluna].findIndex(linha => linha == -1)
+  let linha_id = graf[coluna].findIndex(linha => linha == 1)
+
+  graf_2[linha_id][linha_m_id] = 1
+  // graf_2[linha_id][linha_id] = graf[coluna].find(linha => linha == 1)
+}
+
+console.table(graf_2)
