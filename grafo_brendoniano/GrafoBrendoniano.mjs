@@ -6,10 +6,10 @@ export class GrafoBrendoniano {
   nodes = []
   arestas = []
 
-  constructor(node) {
-    node.custo = 0 //root para dijkstra
-    let node_id = this.nodes.push(node) - 1
-    node.setId(node_id)
+  constructor() {
+    // node.custo = 0 //root para dijkstra
+    // let node_id = this.nodes.push(node) - 1
+    // node.setId(node_id)
   }
 
   /**
@@ -20,9 +20,9 @@ export class GrafoBrendoniano {
    * @returns number
    */
   addNode(node, parent_id, peso) {
-    let node_id = this.nodes.push(node) - 1
-
+    node.custo = this.nodes.length == 0 ? 0 : 999999
     node.ant = null
+    let node_id = this.nodes.push(node) - 1
     node.setId(node_id)
     if (parent_id) {
       // console.log(this.nodes)
