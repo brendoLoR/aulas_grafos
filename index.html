@@ -21,28 +21,130 @@
         var btnAddNodo = document.getElementById('btn_add_nodo')
         // btnAddNodo.addEventListener('click', add_nodo)
 
+        window.cria_grafo_aleatorio = function cria_grafo_aleatorio() {
+            let _grafo = grafo.cria_grafo_aleatorio(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'l', 'm', 'n'])
+            imprime_grafo(_grafo)
+        }
         window.add_nodo = function add_nodo() {
             let _grafo = grafo.add_nodo(nomeNodo.value, idNodoPai.value, pesoNodo.value)
             imprime_grafo(_grafo)
         }
-        window.imprime_grafo = function imprime_grafo(_grafo){
+        window.add_aresta = function add_aresta() {
+            let _grafo = grafo.add_aresta(document.getElementById('id_nodo_pai_a').value, document.getElementById('id_nodo_filho_a').value, document.getElementById('peso_a').value)
+            imprime_grafo(_grafo)
+        }
+        window.add_aresta = function add_aresta() {
+            let _grafo = grafo.add_aresta(document.getElementById('id_nodo_pai_a').value, document.getElementById('id_nodo_filho_a').value, document.getElementById('peso_a').value)
+            imprime_grafo(_grafo)
+        }
+        window.busca_largura = function busca_largura() {
+            let nodo = grafo.busca_largura(document.getElementById('chave_busca').value)
+            if (nodo.status) {
+                imprime_nodo(nodo.r)
+            } else {
+                alert(nodo.r);
+            }
+        }
+        window.busca_profundidade = function busca_profundidade() {
+            let nodo = grafo.busca_profundidade(document.getElementById('chave_busca').value)
+            if (nodo.status) {
+                imprime_nodo(nodo.r)
+            } else {
+                alert(nodo.r);
+            }
+        }
+
+        window.get_dijkstra = function get_dijkstra() {
+            let _grafo = grafo.get_dijkstra(document.getElementById('id_nodo_pai_d').value, document.getElementById('id_nodo_filho_d').value)
+            imprime_caminho(_grafo)
+        }
+        window.get_kahn = function get_kahn() {
+            let _grafo = grafo.get_kahn()
+            if (_grafo.length == 0) {
+                alert("Grafo invalido")
+                return
+            }
+            imprime_khan(_grafo)
+        }
+
+
+        window._imprime_grafo = function _imprime_grafo() {
+            imprime_grafo(grafo.get_grafo())
+        }
+
+
+        window.imprime_grafo = function imprime_grafo(_grafo) {
             saida.innerHTML = ""
             let ul = document.createElement('ul')
 
             _grafo.nodes.map(node => {
                 var li = document.createElement('li')
-                node.pais.map(pai => {
-                    li.appendChild(document.createTextNode("Pai: " + pai.name + " | id: " + pai.id ))
-                    li.appendChild(document.createElement('br'))
-                })
-                li.appendChild(document.createTextNode(node.name + " | id: " + node.id + " | custo: " + node.custo))
+                // node.pais.map(pai => {
+                //     li.appendChild(document.createTextNode("Pai: " + pai.name + " | id: " + pai.id ))
+                //     li.appendChild(document.createElement('br'))
+                // })
+                li.appendChild(document.createTextNode("|--> Nó:  " + node.name + "  id: " + node.id + "  custo: " + node.custo))
                 node.filhos.map(filho => {
                     li.appendChild(document.createElement('br'))
-                    li.appendChild(document.createTextNode("Filho: " + filho.node.name + " | id: " + filho.id + " Peso: " + filho.peso))
+                    li.appendChild(document.createTextNode("|-----> Filho:  " + filho.node.name + "  id: " + filho.id + " Peso: " + filho.peso))
                 })
                 ul.appendChild(li)
             })
             saida.appendChild(ul)
+        }
+        window.imprime_nodo = function imprime_nodo(node) {
+            saida.innerHTML = ""
+            let ul = document.createElement('ul')
+
+            var li = document.createElement('li')
+
+            li.appendChild(document.createTextNode("|--> Nó:  " + node.name + "  id: " + node.id + "  custo: " + node.custo))
+            node.filhos.map(filho => {
+                li.appendChild(document.createElement('br'))
+                li.appendChild(document.createTextNode("|-----> Filho:  " + filho.node.name + "  id: " + filho.id + " Peso: " + filho.peso))
+            })
+            ul.appendChild(li)
+
+            saida.appendChild(ul)
+        }
+        window.imprime_caminho = function imprime_caminho(node) {
+            saida.innerHTML = ""
+            let ul = document.createElement('ul')
+
+            var li = document.createElement('li')
+
+            li.appendChild(document.createTextNode(gera_caminho(node)))
+
+            ul.appendChild(li)
+
+            saida.appendChild(ul)
+        }
+        window.imprime_khan = function imprime_khan(nodes) {
+            saida.innerHTML = ""
+            let ul = document.createElement('ul')
+
+            var li = document.createElement('li')
+
+            li.appendChild(document.createTextNode(_imprime_khan(nodes)))
+
+            ul.appendChild(li)
+
+            saida.appendChild(ul)
+        }
+        window.gera_caminho = function (node, caminho = "") {
+            caminho = caminho + "Nó: " + node.name + " id: " + node.id + " Custo: " + node.custo + "  ==>>  "
+            if (node.ant) {
+                return gera_caminho(node.ant, caminho)
+            }
+            return caminho
+        }
+        window._imprime_khan = function (nodes) {
+            let caminho = ""
+            nodes.forEach(node => {
+                caminho = caminho + "Nó: " + node.name + " id: " + node.id + "  ==>>  "
+            })
+
+            return caminho
         }
     </script>
     <!-- <script>
@@ -57,26 +159,49 @@
             <div class="row">
                 <div class="col-md-6 text-bg-light border border-start-0 border border-top-0">
                     <h2>Menu</h2>
-                    <ul>
-                        <li><button>Iniciar um grafo</button></li>
-                    </ul>
-                    <hr>
-                    <div>
-                        <input class="form-control" type="text" id="nome_nodo" placeholder="Nome do nó" required>
-                        <input class="form-control" type="number" id="id_nodo_pai" placeholder="ID nó pai || vazio">
-                        <input class="form-control" type="number" id="peso_nodo" placeholder="peso || vazio">
-                        <button class="btn btn-success" onclick="add_nodo()">ADD Node</button>
+                    <button class="btn btn-success" onclick="cria_grafo_aleatorio()">Criar grafo aleatorio</button>
+                    <button class="btn btn-success" onclick="_imprime_grafo()">Imprimir grafo</button>
+                    <button class="btn btn-success" onclick="get_kahn()">Imprimir ordenado - Kahn</button>
 
-                        <!-- <form action="add_aresta()">
-                            <input class="form-control" type="number" id="id_nodo_pai" placeholder="ID nó pai" required>
-                            <input class="form-control" type="number" id="id_nodo_filho" placeholder="ID nó filho" required>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+
+                            <h5>Add Nó</h5>
+                            <input class="form-control" type="text" id="nome_nodo" placeholder="Nome do nó" required>
+                            <input class="form-control" type="number" id="id_nodo_pai" placeholder="ID nó pai || vazio">
                             <input class="form-control" type="number" id="peso_nodo" placeholder="peso || vazio">
-                            <input class="btn btn-success" type="submit" value="ADD Aresta">
-                        </form> -->
+                            <button class="btn btn-success" onclick="add_nodo()">ADD Node</button>
+                        </div>
+                        <div class="col">
+                            <h5>Add Aresta</h5>
+                            <input class="form-control" type="number" id="id_nodo_pai_a" placeholder="ID nó pai"
+                                required>
+                            <input class="form-control" type="number" id="id_nodo_filho_a" placeholder="ID nó filho"
+                                required>
+                            <input class="form-control" type="number" id="peso_a" placeholder="peso || vazio">
+                            <button class="btn btn-success" onclick="add_aresta()">ADD Aresta</button>
+                        </div>
+
                     </div>
+
+                    <hr>
+                    <h5>Busca</h5>
+                    <input class="form-control" type="text" id="chave_busca" placeholder="Nome do nó">
+                    <button class="btn btn-success" onclick="busca_largura()">Em largura</button>
+                    <button class="btn btn-success" onclick="busca_profundidade()">Em procundidade</button>
+
+                    <hr>
+                    <h5>DJ kAtra</h5>
+                    <input class="form-control" type="number" id="id_nodo_pai_d" placeholder="ID nó pai" required>
+                    <input class="form-control" type="number" id="id_nodo_filho_d" placeholder="ID nó filho" required>
+                    <button class="btn btn-success" onclick="get_dijkstra()">Buscar caminho</button>
+                    <!-- <form action="add_aresta()">
+                        </form> -->
                 </div>
-                <div class="col-md-6 text-bg-light">
+                <div class="col-md-6 text-bg-light border border-start-0 border border-top-0">
                     <h2>Saida</h2>
+                    <hr>
                     <div class="card">
                         <div class="card-body text-bg-dark" id="saida">
 
