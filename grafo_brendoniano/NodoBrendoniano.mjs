@@ -9,11 +9,20 @@ export class NodoBrendoniano {
    * @param {*} id 
    * @param {*} name 
    */
-  constructor(id, name) {
-    this.name = name
-    this.custo = 9999999
-    this.ant = null
-    this.closed = false
+  constructor(id, name, old = false) {
+    if (!old) {
+      this.name = name
+      this.custo = 9999999
+      this.ant = null
+      this.closed = false
+    }else{
+      this.id = old.id
+      this.name = old.name
+      this.custo = old.custo
+      this.ant = old.ant
+      this.closed = old.closed
+      this.pais = old.pais
+    }
   }
 
   setId(id) {

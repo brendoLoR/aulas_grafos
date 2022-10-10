@@ -17,10 +17,13 @@
 
 import { Fila } from './Fila.mjs'
 import { GrafoBrendoniano } from './GrafoBrendoniano.mjs'
+import { Matrizes } from './Matrizes.mjs'
 import { NodoBrendoniano } from './NodoBrendoniano.mjs'
 
 
 var _grafo = new GrafoBrendoniano()
+var matriz = []
+var matrizes = new Matrizes()
 export const grafo = {
     get_grafo() {
         return _grafo
@@ -56,11 +59,16 @@ export const grafo = {
         console.log(grafo);
         return grafo
     },
+    get_kruskal() {
+        let grafo = _grafo.getKruskal()
+        console.log(grafo);
+        return grafo
+    },
 
     cria_grafo_aleatorio(labels = []) {
         let tamanho = labels.length
         for (let i = 0; i < tamanho; i++) {
-            _grafo.addNode(new NodoBrendoniano(0, labels[i]+_grafo.nodes.length))
+            _grafo.addNode(new NodoBrendoniano(0, labels[i] + _grafo.nodes.length))
         }
         for (let i = 1; i < _grafo.nodes.length; i++) {
             for (let j = 0; j < 4; j++) {
@@ -70,43 +78,54 @@ export const grafo = {
             }
         }
         return _grafo
-    }
+    },
 
+
+
+    cria_matrix_incidencia(numNodos) {
+        matriz = []
+        for (let i = 0; i < numNodos; i++) {
+            matriz[i] = []
+        }
+        return matriz
+    },
+    add_aresta_m(de_id, para_id) {
+        matriz = matrizes.addArestaM(matriz, de_id, para_id)
+        return matriz
+    },
+    get_acentencia(){
+        let asc_matriz = matrizes.trasnposta(matriz)
+        console.table(asc_matriz)
+        asc_matriz = matrizes.incidence_to_adjacence(asc_matriz)
+        return asc_matriz
+    }
 }
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
-// function cria_grafo_aleatorio(tamanho = 0) {
-//     for (let i = 0; i <= tamanho; i++) {
-//         _grafo.addNode(new NodoBrendoniano(0, Math.random() * tamanho))
-//     }
-//     for (let i = 0; i < tamanho; i++) {
-//         for (let i = 0; i < 3; i++) {
-//             _grafo.addAresta(Math.floor(Math.random() * _grafo.nodes.length),Math.floor(Math.random() * _grafo.nodes.length), Math.random()*100);
-//         }
-//     }
-// }
-// cria_grafo_aleatorio(10)
-// let nodo = new NodoBrendoniano(1, "a")
-// _grafo.addNode(nodo)
-// _grafo.addNode(new NodoBrendoniano(0, 'b'), null, null)
-// _grafo.addNode(new NodoBrendoniano(0, 'c'), null, null)
-// _grafo.addNode(new NodoBrendoniano(0, 'd'), null, null)
-// _grafo.addNode(new NodoBrendoniano(0, 'e'), null, null)
+// grafo.cria_grafo_aleatorio(['a', 'b', 'c', 'd'])
+// _grafo.getKruskal()
+// // _grafo.get_grafo()
+// _grafo.getKruskal()
+
+// let graf = [
+//     [],
+//     [],
+//     [],
+//     [],
+//   ]
+
+// let graf = grafo.cria_matrix_incidencia(3)
+// graf = matrizes.addArestaM(graf, 0, 2)
+// graf = matrizes.addArestaM(graf, 1, 2)
+// graf = matrizes.addArestaM(graf, 2, 1)
+// graf = matrizes.addArestaM(graf, 2, 0)
+// graf = matrizes.addArestaM(graf, 1, 0)
 
 
-// _grafo.addAresta(0, 1, null)
-// _grafo.addAresta(0, 2, null)
-// _grafo.addAresta(2, 1, null)
-// _grafo.addAresta(2, 3, null)
-// _grafo.addAresta(1, 3, null)
-// _grafo.addAresta(4, 0, null)
-// _grafo.addAresta(3, 4, null)
-// _grafo.addAresta(1, 3, null)
 
-// let resultado = _grafo.buscaLargura("c", 0)
-// console.log(resultado);
-// resultado = _grafo.buscaProfundidade("c", 0)
-// console.log(resultado);
+// let graf_t = matrizes.trasnposta(graf)
+
+// console.table(matrizes.incidence_to_adjacence(graf_t))

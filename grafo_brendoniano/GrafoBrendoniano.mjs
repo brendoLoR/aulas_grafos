@@ -195,18 +195,34 @@ export class GrafoBrendoniano {
   getKruskal() {
     let _nodes = []
     let _arestas = []
+    this.setAllNaoVisitado()
 
     this.nodes.map(node => {
-      _nodes.push({ node, filhos: [] })
+      let _node = new NodoBrendoniano(null, null, node)
+      _node.filhos = []
+      _nodes.push({ node: _node })
     })
 
-    _arestas = this.arestas.sort((a, b) => a.peso - b.peso)
+    _arestas = structuredClone(this.arestas.sort((a, b) => a.peso - b.peso))
 
-    return this._getKruskal(_grafo, _arestas)
+    return this._getKruskal(_nodes, _arestas)
   }
   _getKruskal(grafo, arestas) {
-    let aresta = arestas.splice(0, 1)
-    console.log(aresta);
+
+    if (arestas.length > 0) {
+
+      let aresta = arestas.splice(0, 1)[0]
+
+      let node_para = grafo.find(node => node.node.id == aresta.para).node
+      let node_de = grafo.find(node => node.node.id == aresta.de).node
+      if (!this._buscaProfundidade(node_para, node_de, { status: false, r: "não encontreado" }, 0).status && aresta.de != aresta.para) {
+        let a = typeof node_de
+        node_de.addFilho(node_para, aresta.peso)
+      }
+      return this._getKruskal(grafo, arestas)
+    }
+    return grafo
+
   }
 
   getNaoVisitado() {
